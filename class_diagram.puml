@@ -1,0 +1,90 @@
+@startuml
+title SC2002 UML Class Diagram
+skinparam classAttributeIconSize 0
+skinparam backgroundColor #FEFEFE
+
+package "com.game.model.core" {
+    
+    ' Value Object / Entity
+    class CombatStats {
+        - maxHp: int
+        - currentHp: int
+        - attack: int
+        - defense: int
+        - speed: int
+        __
+        + CombatStats(maxHp: int, attack: int, defense: int, speed: int)
+        + getMaxHp(): int
+        + getCurrentHp(): int
+        + getAttack(): int
+        + getDefense(): int
+        + getSpeed(): int
+        + setCurrentHp(hp: int): void
+        + modifyAttack(delta: int): void
+        + modifyDefense(delta: int): void
+        + modifySpeed(delta: int): void
+    }
+    
+    ' Entity (Abstract)
+    abstract class Combatant {
+        - name: String
+        - stats: CombatStats
+        - activeStatusEffects: List<StatusEffect>
+        __
+        + Combatant(name: String, stats: CombatStats)
+        + getName(): String
+        + getStats(): CombatStats
+        + getHp(): int
+        + getMaxHp(): int
+        + getAttack(): int
+        + getDefense(): int
+        + getSpeed(): int
+        + isAlive(): boolean
+        + takeDamage(damage: int): void
+        + heal(amount: int): void
+        + applyStatusEffect(effect: StatusEffect): void
+        + removeStatusEffect(effect: StatusEffect): void
+        + updateEffects(): void
+        + canAct(): boolean
+        + {abstract} getAvailableActions(): List<Action>
+    }
+    
+    ' Entity (Abstract)
+    abstract class StatusEffect {
+        - name: String
+        - duration: int
+        - target: Combatant
+        __
+        + StatusEffect(name: String, duration: int, target: Combatant)
+        + getName(): String
+        + getDuration(): int
+        + getTarget(): Combatant
+        + {abstract} apply(): void
+        # tick(): void
+        + isExpired(): boolean
+        + {abstract} remove(): void
+    }
+    
+    ' Interface (Boundary for actions)
+    interface Action <<interface>> {
+        + execute(actor: Combatant, target: Combatant, allEnemies: List<Combatant>): void
+        + getActionName(): String
+    }
+    
+    ' Interface (Control for turn order)
+    interface TurnOrderStrategy <<interface>> {
+        + determineTurnOrder(combatants: List<Combatant>): List<Combatant>
+    }
+    
+    ' Concrete Control class
+    class SpeedBasedTurnOrder {
+        + determineTurnOrder(combatants: List<Combatant>): List<Combatant>
+    }
+    
+    ' Relationships
+    Combatant *-- "1" CombatStats : contains
+    Combatant o-- "0..*" StatusEffect : has
+    StatusEffect --> "1" Combatant : targets
+    SpeedBasedTurnOrder ..|> TurnOrderStrategy : implements
+}
+@enduml
