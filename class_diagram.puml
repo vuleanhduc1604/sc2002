@@ -87,4 +87,59 @@ package "com.game.model.core" {
     StatusEffect --> "1" Combatant : targets
     SpeedBasedTurnOrder ..|> TurnOrderStrategy : implements
 }
+package "com.game.effects" {
+    class StunEffect {
+        + StunEffect(target: Combatant)
+        + apply(): void
+        + remove(): void
+    }
+    
+    class DefendEffect {
+        - {static} DEFENSE_BONUS: int
+        + DefendEffect(target: Combatant)
+        + apply(): void
+        + remove(): void
+    }
+    
+    class SmokeBombEffect {
+        + SmokeBombEffect(target: Combatant)
+        + apply(): void
+        + remove(): void
+    }
+    
+    class ArcaneBlastBuff {
+        - {static} ATK_BONUS: int
+        + ArcaneBlastBuff(target: Combatant)
+        + apply(): void
+        + remove(): void
+    }
+    
+    ' Inheritance links
+    StatusEffect <|-- StunEffect : inherit
+    StatusEffect <|-- DefendEffect : inherit
+    StatusEffect <|-- SmokeBombEffect : inherit
+    StatusEffect <|-- ArcaneBlastBuff : inherit
+}
+package "com.game.config" {
+    enum Difficulty {
+        EASY
+        MEDIUM
+        HARD
+    }
+    
+    class LevelConfig {
+        - difficulty: String
+        - initialEnemies: List<Enemy>
+        - backupEnemies: List<Enemy>
+        __
+        - LevelConfig(difficulty: String, initialEnemies: List<Enemy>, backupEnemies: List<Enemy>)
+        + getDifficulty(): String
+        + getInitialEnemies(): List<Enemy>
+        + getBackupEnemies(): List<Enemy>
+        + {static} createEasyLevel(): LevelConfig
+        + {static} createMediumLevel(): LevelConfig
+        + {static} createHardLevel(): LevelConfig
+    }
+}
+
 @enduml

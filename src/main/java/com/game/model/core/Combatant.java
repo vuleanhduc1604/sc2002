@@ -39,7 +39,12 @@ public abstract class Combatant {
      * Non-positive values are ignored.
      */
     public void takeDamage(int damage) {
-        if (damage <= 0) return;
+        if (damage <= 0) return; 
+        boolean hasSmokeBomb = activeStatusEffects.stream()
+                .anyMatch(e -> "Invulnerable".equals(e.getName()));        
+        if (hasSmokeBomb) {
+            return;
+        }
         stats.setHp(stats.getHp() - damage);
         alive = stats.getHp() > 0;
     }
