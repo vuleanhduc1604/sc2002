@@ -7,17 +7,13 @@ public class SmokeBombEffect extends StatusEffect {
     
     // Smoke bomb effect for 2 rounds
     public SmokeBombEffect(Combatant target) {
-        super("Smoke Bomb", 2, target);
+        super("Invulnerable", 2, target);
     }
 
-    // Set Invulnerability to true for 2 rounds to negate damage taken before setting it back to false
+    // Nothing to apply/remove since invulnerable effect is checked in Combatant.java takeDamage() method
     @Override
-    public void apply() {
-        getTarget().setInvulnerable(true);
-    }
+    public void apply() {}
 
     @Override
-    public void remove() {
-        getTarget().setInvulnerable(false);
-    }
+    public void remove() {}
 }
