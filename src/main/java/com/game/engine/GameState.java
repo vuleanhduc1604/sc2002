@@ -1,4 +1,4 @@
-package com.game.model.core;
+package com.game.engine;
 
 public enum GameState {
     SETUP,

@@ -1,8 +1,11 @@
-package com.game.model.core;
+package com.game.engine;
 
 import com.game.config.LevelConfig;
 import com.game.model.combatants.Player;
-import com.game.model.turn.TurnOrderStrategy;
+import com.game.model.core.Action;
+import com.game.model.core.BattleResult;
+import com.game.model.core.Combatant;
+import com.game.model.core.TurnOrderStrategy;
 
 import java.util.ArrayList;
 import java.util.List;

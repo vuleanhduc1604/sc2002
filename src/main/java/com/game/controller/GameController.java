@@ -1,10 +1,12 @@
-package com.game;
-
 import com.game.config.LevelConfig;
+import com.game.engine.BattleEngine;
+import com.game.engine.GameState;
 import com.game.model.combatants.Player;
 import com.game.model.combatants.Warrior;
-import com.game.model.core.*;
-import com.game.model.turn.SpeedBasedTurnOrder;
+
+import com.game.model.core.Action;
+import com.game.model.core.Combatant;
+import com.game.model.core.SpeedBasedTurnOrder;
 
 import java.util.List;
 import java.util.Scanner;
