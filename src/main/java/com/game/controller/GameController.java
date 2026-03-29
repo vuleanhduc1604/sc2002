@@ -5,14 +5,25 @@ import com.game.model.combatants.Player;
 import com.game.model.combatants.Warrior;
 
 import com.game.model.core.Action;
+import com.game.model.core.BattleResult;
 import com.game.model.core.Combatant;
 import com.game.model.core.SpeedBasedTurnOrder;
 
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Entry point of the game.
+ * Handles user input/output and controls the game loop.
+ */
 public class GameController {
-
+    
+    /**
+     * Main method that starts the game.
+     * Initializes player, level, and battle engine, then runs the game loop.
+     *
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
