@@ -1,6 +1,5 @@
 package com.game.model.combatants;
 
-import com.game.effects.StunEffect;
 import com.game.model.core.Action;
 import com.game.model.core.CombatStats;
 import com.game.model.core.Combatant;
