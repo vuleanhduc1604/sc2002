@@ -1,18 +1,25 @@
 package com.game.actions;
 
-import com.game.core.Action;
+import com.game.model.core.Action;
+import com.game.model.core.Combatant;
 import com.game.model.combatants.Player;
+import java.util.List;
 
 public class SpecialSkillAction implements Action {
-    private Player player;
 
-    public SpecialSkillAction(Player player) {
-        this.player = player;
+    @Override
+    public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
+        // Special skills are unique to the Player class
+        if (actor instanceof Player) {
+            Player player = (Player) actor;
+            player.useSpecialSkill();
+        } else {
+            System.out.println(actor.getName() + " cannot use a special skill.");
+        }
     }
 
     @Override
-    public void execute() {
-        // Triggers the unique skill logic defined in the Player class
-        player.useSpecialSkill();
+    public String getActionName() {
+        return "Special Skill";
     }
 }
