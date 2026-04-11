@@ -1,18 +1,23 @@
 package com.game.actions;
 
-import com.game.core.Action;
-import com.game.model.combatants.Combatant;
+import com.game.model.core.Action;
+import com.game.model.core.Combatant;
+import com.game.effects.DefendEffect;
+import java.util.List;
 
 public class DefendAction implements Action {
-    private Combatant actor;
 
-    public DefendAction(Combatant actor) {
-        this.actor = actor;
+    @Override
+    public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
+        // Apply the defense bonus effect to the person performing the action
+        DefendEffect effect = new DefendEffect(actor);
+        actor.applyStatusEffect(effect);
+        
+        System.out.println(actor.getName() + " takes a defensive stance! Defense increased by 10 for 2 rounds.");
     }
 
     @Override
-    public void execute() {
-        System.out.println(actor.getName() + " is defending!");
-        // actor.applyStatusEffect(new DefendEffect()); 
+    public String getActionName() {
+        return "Defend";
     }
 }
