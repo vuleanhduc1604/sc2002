@@ -19,8 +19,7 @@ public class UseItemAction implements Action {
     public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
         if (item != null && actor instanceof Player) {
             // We cast actor to Player because Items specifically require a Player in your Item interface
-            item.use((Player) actor, null); 
-            ((Player) actor).getInventory().remove(item);
+            ((Player) actor).useItem(item, context);
         }
     }
 
