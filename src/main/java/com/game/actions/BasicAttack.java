@@ -1,21 +1,22 @@
 package com.game.actions;
 
-import com.game.core.Action;
-import com.game.model.combatants.Combatant;
+import com.game.model.core.Action;
+import com.game.model.core.Combatant;
+import java.util.List;
 
 public class BasicAttack implements Action {
-    private Combatant actor;
-    private Combatant target;
 
-    public BasicAttack(Combatant actor, Combatant target) {
-        this.actor = actor;
-        this.target = target;
+    @Override
+    public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
+        if (target != null) {
+            int damage = Math.max(0, actor.getStats().getAttack() - target.getStats().getDefense());
+            target.takeDamage(damage);
+            System.out.println(actor.getName() + " attacks " + target.getName() + " for " + damage + " damage!");
+        }
     }
 
     @Override
-    public void execute() {
-        int damage = Math.max(0, actor.getStats().getAttack() - target.getStats().getDefense());
-        target.takeDamage(damage);
-        System.out.println(actor.getName() + " attacks " + target.getName() + " for " + damage + " damage!");
+    public String getActionName() {
+        return "Basic Attack";
     }
 }
