@@ -12,7 +12,7 @@ public class SpecialSkillAction implements Action {
         // Special skills are unique to the Player class
         if (actor instanceof Player) {
             Player player = (Player) actor;
-            player.useSpecialSkill();
+            player.useSpecialSkill(target, allEnemies);
         } else {
             System.out.println(actor.getName() + " cannot use a special skill.");
         }
