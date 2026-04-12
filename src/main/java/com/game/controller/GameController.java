@@ -1,14 +1,14 @@
+package com.game.controller;
+
 import com.game.config.LevelConfig;
 import com.game.engine.BattleEngine;
 import com.game.engine.GameState;
 import com.game.model.combatants.Player;
 import com.game.model.combatants.Warrior;
-
 import com.game.model.core.Action;
 import com.game.model.core.BattleResult;
 import com.game.model.core.Combatant;
 import com.game.model.core.SpeedBasedTurnOrder;
-
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,7 +29,7 @@ public class GameController {
 
         displayLoadingScreen();
 
-        Player player = new Warrior(); // simplify for now
+        Player player = new Warrior("Player");
         LevelConfig level = LevelConfig.createEasyLevel();
 
         BattleEngine engine = new BattleEngine(
