@@ -7,10 +7,12 @@ import com.game.model.combatants.Player;
 import java.util.List;
 
 public class UseItemAction implements Action {
-    private Item item;
+    private final Item item;
+    private final BattleEngine context;
 
-    public UseItemAction(Item item) {
+    public UseItemAction(Item item, BattleEngine context) {
         this.item = item;
+        this.context = context;
     }
 
     @Override
