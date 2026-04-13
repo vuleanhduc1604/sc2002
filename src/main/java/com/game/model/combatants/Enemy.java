@@ -13,8 +13,6 @@ public abstract class Enemy extends Combatant {
  
 
     public Action chooseAction() {
-        // TODO: replace stub with BasicAttack
-        // return new BasicAttack();
         return new Action() {
             @Override
             public void execute(Combatant actor, Combatant target,

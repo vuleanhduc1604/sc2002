@@ -1,9 +1,7 @@
 package com.game.model.combatants;
 
-import com.game.model.core.Action;
 import com.game.model.core.CombatStats;
 import com.game.model.core.Combatant;
-import com.game.engine.BattleEngine;
 import com.game.items.Item;
 
 import java.util.List;
@@ -29,9 +27,9 @@ public abstract class Player extends Combatant{
         inventory.add(item);
     }
 
-    public void useItem(Item item, BattleEngine context) {
+    public void useItem(Item item, List<Combatant> enemies) {
         if (!inventory.contains(item)) throw new IllegalArgumentException("Item not in inventory: " + item.getName());
-        item.use(this, context);
+        item.use(this, enemies);
         inventory.remove(item);
     }
 
@@ -58,7 +56,6 @@ public abstract class Player extends Combatant{
         return specialSkillCooldown;
     }
 
-    // Special skills will be implemented by Warrior and Wizard subclasses
     public abstract void useSpecialSkill(Combatant target, List<Combatant> allEnemies);
  
     public abstract void useSpecialSkillNoCooldown(Combatant target, List<Combatant> allEnemies);    

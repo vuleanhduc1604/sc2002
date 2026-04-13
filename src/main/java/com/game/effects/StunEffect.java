@@ -9,7 +9,6 @@ public class StunEffect extends StatusEffect {
     public StunEffect(Combatant target) {
         super("Stunned", 2, target);
     }
-    // Nothing to apply/remove since stunned effect is checked in Combatant.java canAct() method
     @Override
     public void apply() {}
 

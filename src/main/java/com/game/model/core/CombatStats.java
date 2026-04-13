@@ -1,8 +1,5 @@
 package com.game.model.core;
 
-/**
- * Holds and validates all combat statistics for a combatant.
- */
 public class CombatStats {
 
     private static final int MIN_STAT_VALUE = 0;
@@ -13,9 +10,6 @@ public class CombatStats {
     private int defense;
     private int speed;
 
-    /**
-     * Creates stats with full HP. All values must be non-negative; maxHp must be > 0.
-     */
     public CombatStats(int maxHp, int attack, int defense, int speed) {
         if (maxHp <= 0)        
             throw new IllegalArgumentException("maxHp must be > 0, got: " + maxHp);
@@ -42,22 +36,18 @@ public class CombatStats {
 
     // Setters / modifiers
 
-    /** Sets HP, clamped to [0, maxHp]. */
     public void setHp(int hp) {
         this.hp = Math.max(MIN_STAT_VALUE, Math.min(hp, maxHp));
     }
 
-    /** Adjusts attack by delta; clamped to 0 minimum. */
     public void modifyAttack(int delta) {
         this.attack = Math.max(MIN_STAT_VALUE, this.attack + delta);
     }
 
-    /** Adjusts defense by delta; clamped to 0 minimum. */
     public void modifyDefense(int delta) {
         this.defense = Math.max(MIN_STAT_VALUE, this.defense + delta);
     }
 
-    /** Adjusts speed by delta; clamped to 0 minimum. */
     public void modifySpeed(int delta) {
         this.speed = Math.max(MIN_STAT_VALUE, this.speed + delta);
     }

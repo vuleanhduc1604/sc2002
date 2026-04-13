@@ -23,18 +23,6 @@ public class LevelConfig {
     public List<Enemy> getBackupEnemies() { return backupEnemies; }
 
 
-    /*
-    * Setting the 3 different levels:
-    * Easy: Create and return a new Level object with label set to easy,
-    * initial array of 3 Goblins objects and empty array for backup
-    *
-    * Medium: Create and return a new Level object with label set to medium,
-    * initial array of 1 Goblin 1 Wolf objects and backup array of 2 Wolves objects
-    * 
-    * Hard: Create and return a new Level oject with label set to hard,
-    * initial array of 2 Goblin objects , backup array of 1 Goblin 2 Wolves objects
-    * 
-     */
     public static LevelConfig createEasyLevel() {
         List<Enemy> initial = new ArrayList<>();
         initial.add(new Goblin("Goblin A"));

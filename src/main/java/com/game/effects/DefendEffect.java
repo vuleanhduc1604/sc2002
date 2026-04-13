@@ -11,7 +11,6 @@ public class DefendEffect extends StatusEffect {
         super("Defending", 2, target);
     }
 
-    // Set Defense to increase by 10 for 2 rounds before decreasing it by 10
     @Override
     public void apply() {
         getTarget().getStats().modifyDefense(DEFENSE_BONUS);

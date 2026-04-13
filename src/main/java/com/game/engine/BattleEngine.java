@@ -10,10 +10,6 @@ import com.game.model.core.TurnOrderStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Core engine that manages the flow of the turn-based battle.
- * Handles turn order, action execution, status effects, and win/loss conditions.
- */
 public class BattleEngine {
 
     private Player player;
@@ -28,12 +24,6 @@ public class BattleEngine {
     private Action playerAction;
     private Combatant playerTarget;
 
-    /**
-     * Constructs a BattleEngine with a player, level configuration, and turn order strategy.
-     * @param player   the player character
-     * @param level    the level configuration containing enemies and backup enemies
-     * @param strategy the strategy used to determine turn order
-     */
     public BattleEngine(Player player, LevelConfig level, TurnOrderStrategy strategy) {
         this.player = player;
         this.enemies = new ArrayList<>(level.getInitialEnemies());
@@ -43,54 +33,20 @@ public class BattleEngine {
         this.gameState = GameState.SETUP;
     }
 
-    /**
-     * Sets the player's selected action and target for the next turn.
-     * @param action the action chosen by the player
-     * @param target the target of the action
-     */
     public void setPlayerAction(Action action, Combatant target) {
         this.playerAction = action;
         this.playerTarget = target;
     }
 
-    /**
-     * Returns the current state of the game.
-     * @return the current GameState 
-     */
     public GameState getGameState() { return gameState; }
-
-    /**
-     * Returns the current round number.
-     * @return the current round counter
-     */
-    public int getRoundCounter() { return roundCounter; }
-
-    /**
-     * Returns the player instance.
-     * @return the player
-     */
-    public Player getPlayer() { return player; }
-    
-    /**
-     * Returns the list of current enemies.
-     * @return list of active enemies
-     */
+    public int getRoundCounter()    { return roundCounter; }
+    public Player getPlayer()       { return player; }
     public List<Combatant> getEnemies() { return enemies; }
 
-    /**
-     * Starts the battle by setting the game state to IN_PROGRESS.
-     */    
     public void startBattle() {
         gameState = GameState.IN_PROGRESS;
     }
 
-    /**
-     * Executes a full round of combat.
-     * Determines turn order, processes each combatant's turn,
-     * removes defeated enemies, spawns backups if needed,
-     * and checks victory/defeat conditions.
-     * @return BattleResult containing logs of all actions in the round
-     */
     public BattleResult executeRound() {
         BattleResult result = new BattleResult();
         result.addLog("=== Round " + roundCounter + " ===");
@@ -118,13 +74,14 @@ public class BattleEngine {
     private void processTurn(Combatant c, BattleResult result) {
         if (!c.isAlive()) return;
 
-        // Apply status effects
-        c.updateEffects();
-
+        // Check stun BEFORE ticking so the stun lasts the full 2 turns (current + next)
         if (!c.canAct()) {
             result.addLog(c.getName() + " is stunned and skips turn.");
+            c.updateEffects(); // still tick down duration while stunned
             return;
         }
+
+        c.updateEffects();
 
         if (c instanceof Player) {
             executePlayerTurn((Player) c, result);
@@ -139,7 +96,7 @@ public class BattleEngine {
     }
 
     private void executePlayerTurn(Player player, BattleResult result) {
-        if (playerAction == null || playerTarget == null) {
+        if (playerAction == null) {
             result.addLog("Player skipped turn.");
             return;
         }

@@ -8,18 +8,15 @@ import java.util.List;
 
 public class UseItemAction implements Action {
     private final Item item;
-    private final BattleEngine context;
 
-    public UseItemAction(Item item, BattleEngine context) {
+    public UseItemAction(Item item) {
         this.item = item;
-        this.context = context;
     }
 
     @Override
     public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
         if (item != null && actor instanceof Player) {
-            // We cast actor to Player because Items specifically require a Player in your Item interface
-            ((Player) actor).useItem(item, context);
+            ((Player) actor).useItem(item, allEnemies);
         }
     }
 

@@ -10,7 +10,6 @@ public class SmokeBombEffect extends StatusEffect {
         super("Invulnerable", 2, target);
     }
 
-    // Nothing to apply/remove since invulnerable effect is checked in Combatant.java takeDamage() method
     @Override
     public void apply() {}
 

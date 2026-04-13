@@ -9,7 +9,6 @@ public class SpecialSkillAction implements Action {
 
     @Override
     public void execute(Combatant actor, Combatant target, List<Combatant> allEnemies) {
-        // Special skills are unique to the Player class
         if (actor instanceof Player) {
             Player player = (Player) actor;
             player.useSpecialSkill(target, allEnemies);

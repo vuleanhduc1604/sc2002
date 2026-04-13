@@ -1,5 +1,9 @@
 package com.game.model.combatants;
 
+import com.game.actions.BasicAttack;
+import com.game.actions.DefendAction;
+import com.game.actions.SpecialSkillAction;
+import com.game.actions.UseItemAction;
 import com.game.model.core.Action;
 import com.game.model.core.CombatStats;
 import com.game.model.core.Combatant;
@@ -53,7 +57,6 @@ public class Wizard extends Player{
         }
     }
 
-    /** @return total enemies killed by Arcane Blast this level */
     public int getArcaneBlastKills() {
         return arcaneBlastKills;
     }
@@ -61,33 +64,13 @@ public class Wizard extends Player{
     @Override
     public List<Action> getAvailableActions() {
         List<Action> actions = new ArrayList<>();
- 
-        // TODO (integration): replace stubs with Person 4's concrete actions
-        // actions.add(new BasicAttack());
-        // actions.add(new DefendAction());
-        // if (!getInventory().isEmpty()) actions.add(new UseItemAction(...));
-        // if (canUseSpecialSkill())      actions.add(new SpecialSkillAction());
- 
-        actions.add(stubAction("Basic Attack"));
-        actions.add(stubAction("Defend"));
-        if (!getInventory().isEmpty())  actions.add(stubAction("Use Item"));
-        if (canUseSpecialSkill())       actions.add(stubAction("Arcane Blast"));
- 
+        actions.add(new BasicAttack());
+        actions.add(new DefendAction());
+        for (com.game.items.Item item : getInventory()) actions.add(new UseItemAction(item));
+        if (canUseSpecialSkill())      actions.add(new SpecialSkillAction());
         return actions;
     }
 
-    // Placeholder
-    private static Action stubAction(String name) {
-        return new Action() {
-            @Override public void execute(Combatant actor, Combatant target,
-                                          java.util.List<Combatant> allEnemies) {
-                throw new UnsupportedOperationException(
-                        "Stub action — replace with Person 4's implementation");
-            }
-            @Override public String getActionName() { return name; }
-        };
-    }
-    
     // For debugging
     @Override
     public String toString() {
