@@ -4,6 +4,7 @@ import com.game.actions.BasicAttack;
 import com.game.model.core.Action;
 import com.game.model.core.CombatStats;
 import com.game.model.core.Combatant;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Enemy extends Combatant {
@@ -25,9 +26,11 @@ public abstract class Enemy extends Combatant {
                 .orElse(null);
     }
 
-    @Override
-    public List<Action> getAvailableActions() {
-        return List.of(chooseAction());
-    }
+@Override
+public List<Action> getAvailableActions() {
+    List<Action> actions = new ArrayList<>();
+    actions.add(chooseAction());
+    return actions;
+}
 
 }
