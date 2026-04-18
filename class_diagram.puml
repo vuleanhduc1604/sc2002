@@ -2,144 +2,291 @@
 title SC2002 UML Class Diagram
 skinparam classAttributeIconSize 0
 skinparam backgroundColor #FEFEFE
+skinparam nodesep 40
+skinparam ranksep 50
 
 package "com.game.model.core" {
-    
-    ' Value Object / Entity
-    class CombatStats {
+
+    class CombatStats <<entity>> {
         - maxHp: int
         - currentHp: int
         - attack: int
         - defense: int
         - speed: int
         __
-        + CombatStats(maxHp: int, attack: int, defense: int, speed: int)
-        + getMaxHp(): int
-        + getCurrentHp(): int
-        + getAttack(): int
-        + getDefense(): int
-        + getSpeed(): int
-        + setCurrentHp(hp: int): void
+        + CombatStats(maxHp, attack, defense, speed)
+        + getHp(): int
+        + setHp(hp: int): void
         + modifyAttack(delta: int): void
         + modifyDefense(delta: int): void
         + modifySpeed(delta: int): void
     }
-    
-    ' Entity (Abstract)
-    abstract class Combatant {
+
+    abstract class Combatant <<entity>> {
         - name: String
         - stats: CombatStats
         - activeStatusEffects: List<StatusEffect>
+        - alive: boolean
         __
-        + Combatant(name: String, stats: CombatStats)
-        + getName(): String
-        + getStats(): CombatStats
-        + getHp(): int
-        + getMaxHp(): int
-        + getAttack(): int
-        + getDefense(): int
-        + getSpeed(): int
-        + isAlive(): boolean
         + takeDamage(damage: int): void
         + heal(amount: int): void
-        + applyStatusEffect(effect: StatusEffect): void
-        + removeStatusEffect(effect: StatusEffect): void
+        + applyStatusEffect(e: StatusEffect): void
         + updateEffects(): void
         + canAct(): boolean
+        + isAlive(): boolean
         + {abstract} getAvailableActions(): List<Action>
     }
-    
-    ' Entity (Abstract)
-    abstract class StatusEffect {
+
+    abstract class StatusEffect <<entity>> {
         - name: String
         - duration: int
         - target: Combatant
         __
-        + StatusEffect(name: String, duration: int, target: Combatant)
-        + getName(): String
-        + getDuration(): int
-        + getTarget(): Combatant
         + {abstract} apply(): void
         # tick(): void
         + isExpired(): boolean
         + {abstract} remove(): void
     }
-    
-    ' Interface (Boundary for actions)
+
     interface Action <<interface>> {
         + execute(actor: Combatant, target: Combatant, allEnemies: List<Combatant>): void
         + getActionName(): String
     }
-    
-    ' Interface (Control for turn order)
+
     interface TurnOrderStrategy <<interface>> {
         + determineTurnOrder(combatants: List<Combatant>): List<Combatant>
     }
-    
-    ' Concrete Control class
-    class SpeedBasedTurnOrder {
+
+    class SpeedBasedTurnOrder <<control>> {
         + determineTurnOrder(combatants: List<Combatant>): List<Combatant>
     }
-    
-    ' Relationships
+
+    class BattleResult <<entity>> {
+        - logs: List<String>
+        __
+        + addLog(log: String): void
+        + getLogs(): List<String>
+    }
+
     Combatant *-- "1" CombatStats : contains
     Combatant o-- "0..*" StatusEffect : has
     StatusEffect --> "1" Combatant : targets
-    SpeedBasedTurnOrder ..|> TurnOrderStrategy : implements
+    SpeedBasedTurnOrder ..|> TurnOrderStrategy
 }
+
+package "com.game.model.combatants" {
+
+    abstract class Player <<entity>> {
+        - inventory: List<Item>
+        - specialSkillCooldown: int
+        + {static} SPECIAL_SKILL_COOLDOWN: int = 3
+        __
+        + addItem(item: Item): void
+        + useItem(item: Item, enemies: List<Combatant>): void
+        + canUseSpecialSkill(): boolean
+        + decreaseCooldown(): void
+        + {abstract} useSpecialSkill(target: Combatant, allEnemies: List<Combatant>): void
+    }
+
+    abstract class Enemy <<entity>> {
+        __
+        + getAvailableActions(): List<Action>
+    }
+
+    class Warrior <<entity>> {
+        + getAvailableActions(): List<Action>
+        + useSpecialSkill(target: Combatant, allEnemies: List<Combatant>): void
+    }
+
+    class Wizard <<entity>> {
+        + getAvailableActions(): List<Action>
+        + useSpecialSkill(target: Combatant, allEnemies: List<Combatant>): void
+    }
+
+    class Goblin <<entity>> {
+        + getAvailableActions(): List<Action>
+    }
+
+    class Wolf <<entity>> {
+        + getAvailableActions(): List<Action>
+    }
+
+    Combatant <|-- Player
+    Combatant <|-- Enemy
+    Player <|-- Warrior
+    Player <|-- Wizard
+    Enemy <|-- Goblin
+    Enemy <|-- Wolf
+}
+
+package "com.game.items" {
+
+    interface Item <<interface>> {
+        + use(player: Player, enemies: List<Combatant>): void
+        + getName(): String
+    }
+
+    class Potion <<entity>> {
+        - {static} HEAL_AMOUNT: int = 50
+        + use(player: Player, enemies: List<Combatant>): void
+        + getName(): String
+    }
+
+    class SmokeBomb <<entity>> {
+        + use(player: Player, enemies: List<Combatant>): void
+        + getName(): String
+    }
+
+    class PowerStone <<entity>> {
+        - {static} ATK_BOOST: int = 10
+        + use(player: Player, enemies: List<Combatant>): void
+        + getName(): String
+    }
+
+    Item <|.. Potion
+    Item <|.. SmokeBomb
+    Item <|.. PowerStone
+    Player o-- "0..*" Item : inventory
+}
+
 package "com.game.effects" {
-    class StunEffect {
+
+    class StunEffect <<entity>> {
         + StunEffect(target: Combatant)
         + apply(): void
         + remove(): void
     }
-    
-    class DefendEffect {
+
+    class DefendEffect <<entity>> {
         - {static} DEFENSE_BONUS: int
         + DefendEffect(target: Combatant)
         + apply(): void
         + remove(): void
     }
-    
-    class SmokeBombEffect {
+
+    class SmokeBombEffect <<entity>> {
         + SmokeBombEffect(target: Combatant)
         + apply(): void
         + remove(): void
     }
-    
-    class ArcaneBlastBuff {
+
+    class ArcaneBlastBuff <<entity>> {
         - {static} ATK_BONUS: int
         + ArcaneBlastBuff(target: Combatant)
         + apply(): void
         + remove(): void
     }
-    
-    ' Inheritance links
-    StatusEffect <|-- StunEffect : inherit
-    StatusEffect <|-- DefendEffect : inherit
-    StatusEffect <|-- SmokeBombEffect : inherit
-    StatusEffect <|-- ArcaneBlastBuff : inherit
+
+    StatusEffect <|-- StunEffect
+    StatusEffect <|-- DefendEffect
+    StatusEffect <|-- SmokeBombEffect
+    StatusEffect <|-- ArcaneBlastBuff
 }
+
+package "com.game.actions" {
+
+    class BasicAttack <<control>> {
+        + execute(actor, target, allEnemies): void
+        + getActionName(): String
+    }
+
+    class DefendAction <<control>> {
+        + execute(actor, target, allEnemies): void
+        + getActionName(): String
+    }
+
+    class SpecialSkillAction <<control>> {
+        + execute(actor, target, allEnemies): void
+        + getActionName(): String
+    }
+
+    class UseItemAction <<control>> {
+        - item: Item
+        __
+        + UseItemAction(item: Item)
+        + execute(actor, target, allEnemies): void
+        + getActionName(): String
+    }
+
+    Action <|.. BasicAttack
+    Action <|.. DefendAction
+    Action <|.. SpecialSkillAction
+    Action <|.. UseItemAction
+    UseItemAction --> Item
+}
+
+package "com.game.engine" {
+
+    class BattleEngine <<control>> {
+        - player: Player
+        - enemies: List<Combatant>
+        - backupEnemies: List<Combatant>
+        - turnOrderStrategy: TurnOrderStrategy
+        - roundCounter: int
+        - gameState: GameState
+        __
+        + BattleEngine(player: Player, level: LevelConfig, strategy: TurnOrderStrategy)
+        + startBattle(): void
+        + executeRound(): BattleResult
+        + setPlayerAction(action: Action, target: Combatant): void
+        + getGameState(): GameState
+        + getEnemies(): List<Combatant>
+    }
+
+    enum GameState {
+        SETUP
+        IN_PROGRESS
+        PLAYER_VICTORY
+        PLAYER_DEFEAT
+    }
+
+    BattleEngine --> GameState
+    BattleEngine --> "1" TurnOrderStrategy
+    BattleEngine --> "1" Player
+    BattleEngine --> "0..*" Combatant : manages
+    BattleEngine ..> BattleResult : produces
+}
+
 package "com.game.config" {
+
+    class LevelConfig <<entity>> {
+        - difficulty: String
+        - initialEnemies: List<Enemy>
+        - backupEnemies: List<Enemy>
+        __
+        + {static} createEasyLevel(): LevelConfig
+        + {static} createMediumLevel(): LevelConfig
+        + {static} createHardLevel(): LevelConfig
+        + getInitialEnemies(): List<Enemy>
+        + getBackupEnemies(): List<Enemy>
+    }
+
     enum Difficulty {
         EASY
         MEDIUM
         HARD
     }
-    
-    class LevelConfig {
-        - difficulty: String
-        - initialEnemies: List<Enemy>
-        - backupEnemies: List<Enemy>
+
+    LevelConfig --> Difficulty
+    LevelConfig o-- "0..*" Enemy : configures
+}
+
+package "com.game.controller" {
+
+    class GameController <<boundary>> {
+        - engine: BattleEngine
+        - scanner: Scanner
         __
-        - LevelConfig(difficulty: String, initialEnemies: List<Enemy>, backupEnemies: List<Enemy>)
-        + getDifficulty(): String
-        + getInitialEnemies(): List<Enemy>
-        + getBackupEnemies(): List<Enemy>
-        + {static} createEasyLevel(): LevelConfig
-        + {static} createMediumLevel(): LevelConfig
-        + {static} createHardLevel(): LevelConfig
+        + {static} main(args: String[]): void
+        - selectClass(): Player
+        - selectItems(player: Player): void
+        - selectDifficulty(): LevelConfig
+        - runBattleLoop(): void
+        - displayBattleStatus(): void
     }
+
+    GameController --> BattleEngine : drives
+    GameController --> LevelConfig : uses
 }
 
 @enduml
